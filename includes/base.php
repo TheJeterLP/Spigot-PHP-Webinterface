@@ -37,6 +37,10 @@ function requireAnyRole(array $roles): void {
     }
 }
 
+function hasAnyRole(array $roles): bool {
+    return isLoggedIn() && in_array($_SESSION['role'], $roles, true);
+}
+
 
 function isLoggedIn(): bool {
     return !empty($_SESSION['auth']);

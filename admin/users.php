@@ -7,7 +7,7 @@ $users = $db->query(
     "SELECT id, username, role, active, created_at FROM users ORDER BY id"
 )->fetchAll();
 ?>
-<h1>Benutzerverwaltung</h1>
+<h1>Users</h1>
 
 <!-- Benutzer anlegen -->
 <form class="row g-2 mb-4" method="post" action="/functions/admin/user_actions.php">

@@ -32,7 +32,7 @@ require_once __DIR__ . '/../includes/base.php';
                     </ul>
 
                     <div class="navbar-nav col-lg-6 justify-content-lg-center">
-                        <?php if (hasUserRole('admin')) { ?>
+                        <?php if (hasAnyRole(['admin', 'operator'])) { ?>
                             <form>
                                 <button type="button" class="btn btn-primary" onclick="startServer()">Start</button>
                                 <button type="button" class="btn btn-danger" onclick="stopServer()">Stop</button>
@@ -44,13 +44,16 @@ require_once __DIR__ . '/../includes/base.php';
                                 Pages
                             </button>
                             <ul class="dropdown-menu">
-                                <?php if (hasUserRole('admin')) { ?>
+                                <?php if (hasAnyRole(['admin', 'operator'])) { ?>
                                     <li><a class="dropdown-item" href="/log">Show Server Log</a></li>
+                                    <li><a class="dropdown-item" href="/plugins">Show installed Plugins</a></li>
                                 <?php } ?>
                                 <li><a class="dropdown-item" href="/players">Show Online Players</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
+                                <?php if (hasuserRole('admin')) { ?>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/users.php">Admin: User Management</a></li> 
+                                <?php } ?>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/">Home</a></li>
                             </ul>
                         </div>

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/base.php';
 require_once __DIR__ . '/../config.php';
-requireRole('admin');
+requireAnyRole(['admin', 'operator']);
 
 $SPIGOT_SERVER_PATH = rtrim($SPIGOT_SERVER_PATH, '/');
 $logfile = $SPIGOT_SERVER_PATH . '/logs/latest.log';

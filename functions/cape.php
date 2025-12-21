@@ -23,7 +23,7 @@ if (file_exists($cacheFile) && time() - filemtime($cacheFile) < $cacheTTL) {
 }
 
 // Cape von Crafatar holen
-$url = "https://crafatar.com/capes/$uuid";
+$url = "https://api.capes.dev/load/$uuid/minecraft";
 $ctx = stream_context_create([
     "http" => [
         "timeout" => 3,
@@ -31,7 +31,17 @@ $ctx = stream_context_create([
     ]
 ]);
 
-$data = @file_get_contents($url, false, $ctx);
+
+
+
+$jsonData = file_get_contents($url, false, $ctx);
+if(!$jsonData) {
+    exit;
+}
+$json = json_decode($jsonData, true);
+$capeUrl = $json["frontImageUrl"] ?? "";
+
+$data = @file_get_contents($capeUrl, false, $ctx); 
 
 // Kein Cape vorhanden → leere Antwort cachen
 if (!$data) {

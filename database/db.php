@@ -17,3 +17,18 @@ $stmt = $db->exec("CREATE TABLE IF NOT EXISTS users (
     active INTEGER NOT NULL DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );");
+
+// Insert a default admin user if not exists
+$users = $db->query(
+    "SELECT id FROM users WHERE username = 'admin'"
+)->fetchAll();
+
+if (count($users) === 0) {
+    $hashedPassword = password_hash('admin123', PASSWORD_DEFAULT);
+    $stmt = $db->prepare("INSERT INTO users (username, password, role) VALUES (:username, :password, :role)");
+    $stmt->execute([
+        ':username' => 'admin',
+        ':password' => $hashedPassword,
+        ':role' => 'admin'
+    ]);
+}
