@@ -1,0 +1,26 @@
+[Unit]
+Description=Minecraft Spigot Server
+After=network.target
+
+[Service]
+User=mcuser
+Group=mcuser
+WorkingDirectory=/opt/spigot-server
+
+
+Type=forking
+RemainAfterExit=yes
+ExecStart=/bin/bash /opt/spigot-server/start.sh
+ExecStop=/bin/bash /opt/spigot-server/stop.sh
+
+ExecStopPost=/bin/sleep 10
+
+KillMode=none
+Restart=on-failure
+RestartSec=10
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
