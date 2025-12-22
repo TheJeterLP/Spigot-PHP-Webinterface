@@ -1,9 +1,10 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/../../includes/base.php';
-require_once __DIR__ . '/../../classes/rcon.php';
+require_once __DIR__ . '/../../config.php';
 requireRole('admin');
 $cmd = trim($_POST['command'] ?? '');
 
@@ -22,20 +23,40 @@ foreach ($blocked as $b) {
     }
 }
 
-try {
-    $rcon = new Rcon();
-    if (!$rcon->connect()) {
-        echo json_encode([
-            "online" => false,
-            "error" => "RCON nicht erreichbar"
-        ]);
-        exit;
-    }
+global $SPIGOT_PLUGIN_API_PORT;
 
-    $response = $rcon->command($cmd);
-    echo htmlspecialchars($response);
-    $rcon->disconnect();
-} catch (Exception $e) {
-    http_response_code(500);
-    echo 'RCON Error! ' . htmlspecialchars($e->getMessage());
+$url = "http://127.0.0.1:" . (int) $SPIGOT_PLUGIN_API_PORT . "/command";
+$payload = json_encode([
+    "command" => $cmd
+        ]);
+
+$ctx = stream_context_create([
+    "http" => [
+        "method" => "POST",
+        "timeout" => 3,
+        "header" => [
+            "Content-Type: application/json",
+            "Accept: application/json",
+            "X-API-Token: " . $_SESSION["api_token"]
+        ],
+        "content" => $payload
+    ]
+        ]);
+
+$json = @file_get_contents($url, false, $ctx);
+if ($json === false) {
+    http_response_code(502);
+    echo json_encode(["ok" => false, "error" => "plugin_unreachable"]);
+    exit;
 }
+
+$data = json_decode($json, true);
+
+if (!is_array($data)) {
+    http_response_code(502);
+    echo json_encode(["ok" => false, "error" => "invalid_plugin_response"]);
+    exit;
+}
+
+echo json_encode($data);
+exit;

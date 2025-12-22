@@ -62,7 +62,7 @@ requireAnyRole(['admin', 'operator']);
                 body.innerHTML = "";
 
                 data.plugins.forEach(p => {
-                const statusBadge = p.active === true ? '<span class="badge text-bg-success">Active</span>' : p.active === false? '<span class="badge text-bg-danger">Inactive</span>': '<span class="badge text-bg-secondary">Unknown</span>';
+                const statusBadge = p.enabled === true ? '<span class="badge text-bg-success">Active</span>' : p.enabled === false? '<span class="badge text-bg-danger">Inactive</span>': '<span class="badge text-bg-secondary">Unknown</span>';
                     body.innerHTML += `
                 <tr>                  
                     <td>${p.name}</td>

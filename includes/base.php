@@ -13,7 +13,7 @@ foreach($foldersToCreate as $folder) {
 session_start();
 
 function requireLogin(): void {
-    if (empty($_SESSION['auth'])) {
+    if (empty($_SESSION['auth']) || empty($_SESSION['api_token'])) {
         header('Location: /login');
         exit;
     }

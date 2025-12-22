@@ -1,73 +1,53 @@
 <?php
+
 require_once __DIR__ . '/../includes/base.php';
 requireAnyRole(['admin', 'operator']);
-require_once __DIR__ . '/../classes/rcon.php';
+require_once __DIR__ . '/../config.php';
 
-function parsePluginsWithStatus(string $input): array
-{
-    // Alles vor "):" abschneiden
-    if (!preg_match('/\):\s*(.+)$/', $input, $matches)) {
-        return [];
+function getPlugins(): array|false {
+    global $SPIGOT_PLUGIN_API_PORT;
+    $url = "http://127.0.0.1:" . (int) $SPIGOT_PLUGIN_API_PORT . "/plugins";
+    $ctx = stream_context_create([
+        "http" => [
+            "method" => "GET",
+            "timeout" => 3,
+            "header" => [
+                "X-API-Token: " . $_SESSION["api_token"],
+                "Accept: application/json"
+            ]
+        ]
+    ]);
+
+    $json = @file_get_contents($url, false, $ctx);
+
+    if ($json === false) {
+        return false;
     }
 
-    $pluginPart = $matches[1];
+    $data = json_decode($json, true);
 
-    // Plugins anhand von Komma trennen
-    $rawPlugins = array_map('trim', explode(',', $pluginPart));
-
-    $result = [];
-
-    foreach ($rawPlugins as $plugin) {
-
-        // führenden Farbecode erfassen (§a, §c, ...)
-        if (preg_match('/^(§[0-9a-fk-or])(.+)$/i', $plugin, $m)) {
-            $colorCode = $m[1];
-            $namePart  = $m[2];
-        } else {
-            $colorCode = null;
-            $namePart  = $plugin;
-        }
-
-        // Reset-Codes (§f) aus dem Namen entfernen
-        $name = preg_replace('/§[0-9a-fk-or]/i', '', $namePart);
-
-        // Status bestimmen
-        $active = match (strtolower($colorCode)) {
-            '§a' => true,
-            '§c' => false,
-            default => null // unbekannt / nicht markiert
-        };
-
-        $result[] = [
-            'name'      => $name,
-            'active'    => $active,
-            'color'     => $colorCode,
-            'raw'       => $plugin
-        ];
+    if (!is_array($data)) {
+        return false;
     }
 
-    return $result;
+    return $data;
 }
-
 
 header("Content-Type: application/json");
 
-$rcon = new Rcon();
+$plugins = getPlugins();
 
-if (!$rcon->connect()) {
+if ($plugins === false) {
     echo json_encode([
         "online" => false,
-        "error" => "RCON nicht erreichbar"
+        "count" => 0,
+        "plugins" => []
     ]);
-    exit;
+} else {
+    echo json_encode([
+        "online" => true,
+        "count" => count($plugins),
+        "plugins" => $plugins
+    ]);
 }
 
-$response = $rcon->command("bukkit:plugins");
-$rcon->disconnect();
-$plugins = parsePluginsWithStatus($response);
-
-echo json_encode([
-    "online" => true,
-    "count" => count($plugins),
-    "plugins" => $plugins
-]);

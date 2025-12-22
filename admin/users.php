@@ -4,7 +4,7 @@ require_once __DIR__ . '/../database/db.php';
 requireRole('admin');
 
 $users = $db->query(
-    "SELECT id, username, role, active, created_at FROM users ORDER BY id"
+    "SELECT id, username, role, active, created_at, token FROM users ORDER BY id"
 )->fetchAll();
 ?>
 <h1>Users</h1>
@@ -37,6 +37,7 @@ $users = $db->query(
     <th>User</th>
     <th>Role</th>
     <th>State</th>
+    <th>API-Token</th>
     <th>Actions</th>
 </tr>
 </thead>
@@ -48,6 +49,7 @@ $users = $db->query(
     <td><?= htmlspecialchars($u['username']) ?></td>
     <td><?= $u['role'] ?></td>
     <td><?= $u['active'] ? 'Active' : 'Inactive' ?></td>
+    <td><?= $u['token'] ?></td>
     <td class="d-flex gap-1">
 
         <!-- Rolle ändern -->
@@ -66,6 +68,12 @@ $users = $db->query(
             <input type="hidden" name="action" value="toggle">
             <input type="hidden" name="id" value="<?= $u['id'] ?>">
             <button class="btn btn-sm btn-warning">Toggle</button>
+        </form>
+        
+        <form method="post" action="/functions/admin/user_actions.php">
+            <input type="hidden" name="action" value="resettoken">
+            <input type="hidden" name="id" value="<?= $u['id'] ?>">
+            <button class="btn btn-sm btn-warning">Reset API-Token</button>
         </form>
 
         <!-- Löschen -->

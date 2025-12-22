@@ -15,7 +15,8 @@ $stmt = $db->exec("CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     role TEXT NOT NULL DEFAULT 'viewer',
     active INTEGER NOT NULL DEFAULT 1,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    api_token TEXT
 );");
 
 // Insert a default admin user if not exists
@@ -25,10 +26,11 @@ $users = $db->query(
 
 if (count($users) === 0) {
     $hashedPassword = password_hash('admin123', PASSWORD_DEFAULT);
-    $stmt = $db->prepare("INSERT INTO users (username, password, role) VALUES (:username, :password, :role)");
+    $stmt = $db->prepare("INSERT INTO users (username, password, role, token) VALUES (:username, :password, :role, :token)");
     $stmt->execute([
         ':username' => 'admin',
         ':password' => $hashedPassword,
-        ':role' => 'admin'
+        ':role' => 'admin',
+        ':token' => bin2hex(random_bytes(32))
     ]);
 }
