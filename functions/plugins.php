@@ -5,8 +5,8 @@ requireAnyRole(['admin', 'operator']);
 require_once __DIR__ . '/../config.php';
 
 function getPlugins(): array|false {
-    global $SPIGOT_PLUGIN_API_PORT;
-    $url = "http://127.0.0.1:" . (int) $SPIGOT_PLUGIN_API_PORT . "/plugins";
+    global $SPIGOT_PLUGIN_API_URL;
+    $url = $SPIGOT_PLUGIN_API_URL. "/plugins";
     $ctx = stream_context_create([
         "http" => [
             "method" => "GET",

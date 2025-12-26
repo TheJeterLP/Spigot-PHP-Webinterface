@@ -16,7 +16,7 @@ $stmt = $db->exec("CREATE TABLE IF NOT EXISTS users (
     role TEXT NOT NULL DEFAULT 'viewer',
     active INTEGER NOT NULL DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    api_token TEXT
+    token TEXT
 );");
 
 // Insert a default admin user if not exists

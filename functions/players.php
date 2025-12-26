@@ -5,8 +5,8 @@ require_once __DIR__ . '/../config.php';
 requireLogin();
 
 function getPlayers(): array|false {
-    global $SPIGOT_PLUGIN_API_PORT;
-    $url = "http://127.0.0.1:" . (int) $SPIGOT_PLUGIN_API_PORT . "/players";
+    global $SPIGOT_PLUGIN_API_URL;
+    $url = $SPIGOT_PLUGIN_API_URL . "/players";
     $ctx = stream_context_create([
         "http" => [
             "method" => "GET",

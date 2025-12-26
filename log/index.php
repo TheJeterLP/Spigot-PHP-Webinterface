@@ -22,7 +22,7 @@ requireAnyRole(['admin', 'operator']);
             .then(response => response.text())
             .then(html => {
                 const logEl = document.getElementById('server-log');
-                logEl.innerHTML = html;
+                logEl.innerHTML = mcColorToHtml(html);
             }).catch(err => appendAlert(err, 'danger'));
     }
 

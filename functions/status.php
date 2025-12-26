@@ -6,9 +6,9 @@ requireLogin();
 
 header("Content-Type: application/json; charset=utf-8");
 
-function isOnline(): bool {
-    global $SPIGOT_PLUGIN_API_PORT;
-    $url = "http://127.0.0.1:" . (int) $SPIGOT_PLUGIN_API_PORT . "/online";
+function getData(): array|false {
+    global $SPIGOT_PLUGIN_API_URL;
+    $url = $SPIGOT_PLUGIN_API_URL . "/online";
     $ctx = stream_context_create([
         "http" => [
             "method" => "GET",
@@ -25,18 +25,27 @@ function isOnline(): bool {
         return false;
     }
     $data = json_decode($json, true);
-    return $data['online'];
+    
+    if (!is_array($data)) {
+        return false;
+    }
+    
+    return $data;
 }
 
-if (!isOnline()) {
+$data = getData();
+
+if (!$data) {
     echo json_encode([
         "online" => false,
-        "status" => "Offline"
+        "status" => "Offline",
+        "version" => "Unknown"
     ]);
     exit;
 } else {
     echo json_encode([
-        "online" => true,
-        "status" => "Online"
+        "online" => $data['online'],
+        "status" => "Online",
+        "version" => $data['version']
     ]);
 }

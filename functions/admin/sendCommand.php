@@ -23,9 +23,9 @@ foreach ($blocked as $b) {
     }
 }
 
-global $SPIGOT_PLUGIN_API_PORT;
+global $SPIGOT_PLUGIN_API_URL;
 
-$url = "http://127.0.0.1:" . (int) $SPIGOT_PLUGIN_API_PORT . "/command";
+$url = $SPIGOT_PLUGIN_API_URL . "/command";
 $payload = json_encode([
     "command" => $cmd
         ]);

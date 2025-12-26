@@ -1,6 +1,4 @@
-<?php
-
-?>
+<?php ?>
 </main>
 
 <div class="container text-center">
@@ -12,10 +10,11 @@
 </div>
 <?php
 if (isLoggedIn()) {
-?>
+    ?>
     <script src="/scripts/scripts.js"></script>
     <script src="/scripts/functions.js"></script>
 <?php } ?>
+<script src ="/scripts/base.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 
