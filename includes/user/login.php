@@ -1,13 +1,16 @@
 <?php
+require_once realpath(__DIR__ . '/../../functions.php');
 
-$a = array();
-$a['filename'] = 'user/login.php';
-$a['title'] = 'Login';
-$a['data'] = array();
-$a['header-footer'] = false;
-$a['custom-css'] = 'login.css';
-$a['body-class'] = 'd-flex align-items-center py-4 bg-body-tertiary';
-$a['main-class'] = 'form-signin w-100 m-auto';
+$a = [
+    'filename'  => 'user/login.php',
+    'title'     => 'Login',
+    'data'      => [],
+    'header-footer' => false,
+    'custom-css' => 'login.css',
+    'body-class' => 'd-flex align-items-center py-4 bg-body-tertiary',
+    'main-class' => 'form-signin w-100 m-auto'
+];
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['login_attempts'] ??= 0;
@@ -17,12 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $_SESSION['login_attempts']++;
-
-    $stmt = $db->prepare(
-            'SELECT id, username, password, role, token
-         FROM users 
-         WHERE username = :u AND active = 1'
-    );
+    
+    $db = getDatabase();
+    $stmt = $db->prepare('SELECT id, username, password, role, token FROM users WHERE username = :u AND active = 1');
     $stmt->execute(['u' => $_POST['username']]);
     $user = $stmt->fetch();
 

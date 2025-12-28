@@ -17,20 +17,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'functions.php';
-require_once 'config.php';
 require_once 'sites.php';
 
 date_default_timezone_set('Europe/Berlin');
-
-createRequiredFolders();
-
-session_start();
-
-$db = new PDO('sqlite:' . __DIR__ . '/../data/users.db');
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-setupDb($db);
+startMySession();
+setupDb();
 
 $headerfooter = true;
 $title = 'Spigot - Webinterface';
@@ -89,10 +80,12 @@ if (is_array($ret)) {
 include 'templates/header.php';
 
 //check if return array is correctly
-if (is_array($ret) && isset($ret['filename'], $ret['data']) && is_string($ret['filename']) && is_array($ret['data'])) {
+if (is_array($ret) && isset($ret['filename']) && is_string($ret['filename'])) {
     //check if given template file exists
     if (file_exists($file = 'templates/' . $ret['filename'])) {
-        $data = $ret['data'];
+        if (isset($ret['data'])) {
+            $data = $ret['data'];
+        }
         //include template file
         include $file;
     } else {

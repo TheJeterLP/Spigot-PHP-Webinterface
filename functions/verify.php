@@ -1,8 +1,6 @@
 <?php
+require_once realpath(__DIR__ . '/../functions.php');
 declare(strict_types=1);
-
-ini_set('display_errors', 1);
-error_reporting(1);
 
 header("Content-Type: application/json");
 
@@ -16,9 +14,7 @@ if (!$token) {
     exit;
 }
 
-$db = new PDO('sqlite:' . __DIR__ . '/../../data/users.db');
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+$db = getDatabase();
 $stmt = $db->prepare(
     "SELECT username, role FROM users WHERE token = :token AND active = 1"
 );

@@ -1,8 +1,9 @@
 <?php
 
-$a = array();
-$a['filename'] = 'main.php';
-$a['title'] = 'Spigot - Webinterface';
-$a['data'] = array();
+$a = [
+    'filename'  => 'main.php',
+    'title'     => 'Spigot - Webinterface',
+];
+
 
 return $a;

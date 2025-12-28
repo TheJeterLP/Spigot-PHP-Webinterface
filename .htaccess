@@ -3,20 +3,8 @@
     Deny from all
 </Files>
 
-<Files ~ "settings.php">
-    Order deny,allow
-    Deny from all
-</Files>
-
-<Files ~ "functions.php">
-    Order deny,allow
-    Deny from all
-</Files>
-
-<Files ~ "sites.php">
-    Order deny,allow
-    Deny from all
-</Files>
+RedirectMatch 404 /\.git
+RedirectMatch 404 /\example-files
 
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -9,7 +9,7 @@
         </thead>
         <tbody id="plugin-table-body">
             <?php
-            $plugins = $data['plugins'];
+            $plugins = $data;
             if (empty($plugins)) {
                 echo '<tr><td colspan="3">No Plugins installed!</td></tr>';
             } else {

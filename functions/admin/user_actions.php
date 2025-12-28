@@ -1,12 +1,10 @@
 <?php
-require_once __DIR__ . '/../../functions.php';
+require_once realpath(__DIR__ . '/../../functions.php');
 requireRole('admin');
 
 $action = $_POST['action'] ?? null;
-$db = new PDO('sqlite:' . __DIR__ . '/../../data/users.db');
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
+$db = getDatabase();
 
 switch ($action) {
 

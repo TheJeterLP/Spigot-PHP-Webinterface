@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__ . '/../functions.php';
-require_once __DIR__ . '/../config.php';
+require_once realpath(__DIR__ . '/../functions.php');
 requireAnyRole(['admin', 'operator']);
-echo shell_exec($SPIGOT_STOP_COMMAND);
+
+$config = require realpath(__DIR__ . '/../config.php');
+echo shell_exec($config['spigot']['stop-command']);
 ?>

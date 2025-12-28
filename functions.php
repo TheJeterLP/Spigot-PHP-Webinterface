@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/config.php';
-
 function showInfo($msg) {
     echo '<div class="container has-text-centered"><div id="is-info" class="notification is-info"><button class="delete"></button>' . $msg . '</div></div>';
 }
@@ -10,10 +8,17 @@ function showError($msg) {
     echo '<div class="container has-text-centered"><div class="notification is-danger"><button class="delete"></button>' . $msg . '</div></div>';
 }
 
-function requireLogin(): void {
+function startMySession(): void {
     if (session_status() === PHP_SESSION_NONE) {
+        ini_set('session.cookie_httponly', 1);
+        //ini_set('session.cookie_secure', 1); // bei HTTPS
+        ini_set('session.use_strict_mode', 1);
         session_start();
     }
+}
+
+function requireLogin(): void {
+    startMySession();
     if (empty($_SESSION['auth']) || empty($_SESSION['api_token'])) {
         header('Location: /login');
         exit;
@@ -41,9 +46,7 @@ function hasAnyRole(array $roles): bool {
 }
 
 function isLoggedIn(): bool {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+    startMySession();
     return !empty($_SESSION['auth']);
 }
 
@@ -51,7 +54,8 @@ function hasUserRole(string $role): bool {
     return isLoggedIn() && $_SESSION['role'] == $role;
 }
 
-function setupDb($db) {
+function setupDb() {
+    $db = getDatabase();
     $stmt = $db->exec("CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
@@ -79,20 +83,9 @@ function setupDb($db) {
     }
 }
 
-function createRequiredFolders() {
-    $startFolder = realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR;
-    $foldersToCreate = ['data'];
-
-    foreach ($foldersToCreate as $folder) {
-        $fullPath = $startFolder . $folder;
-        if (!is_dir($fullPath))
-            mkdir($fullPath, 0755, true);
-    }
-}
-
 function getJsonFromPluginAPI($endpoint, $requestBody = null, $method = 'GET') {
-    global $SPIGOT_PLUGIN_API_URL;
-    $url = $SPIGOT_PLUGIN_API_URL . $endpoint;
+    $config = require realpath(__DIR__ . '/config.php');
+    $url = $config['spigot']['plugin-backend-url'] . $endpoint;
     $ctx = stream_context_create([
         "http" => [
             "method" => $method,
@@ -118,4 +111,15 @@ function getJsonFromPluginAPI($endpoint, $requestBody = null, $method = 'GET') {
     }
 
     return json_encode($data);
+}
+
+function getDatabase() {
+    $dataFolder = realpath(__DIR__ . '/../data');
+    if (!is_dir($dataFolder))
+        mkdir($dataFolder, 0755, true);
+
+    $db = new PDO('sqlite:' . $dataFolder . '/users.db');
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    return $db;
 }

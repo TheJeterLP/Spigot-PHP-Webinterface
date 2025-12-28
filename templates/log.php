@@ -9,5 +9,5 @@
 
 
     <h3>Server Log:</h3>
-    <pre id="server-log"><?php echo $data['log'] ?></pre>
+    <pre id="server-log"><?php echo $data ?></pre>
 </div>

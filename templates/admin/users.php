@@ -1,5 +1,5 @@
 <?php
-$users = $data['users'];
+$users = $data;
 ?>
 <h1>Users</h1>
 

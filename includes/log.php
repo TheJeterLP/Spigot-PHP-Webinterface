@@ -1,30 +1,32 @@
 <?php
 
+require_once realpath(__DIR__ . '/../functions.php');
 requireAnyRole(['admin', 'operator']);
 
-$a = array();
-$a['filename'] = 'log.php';
-$a['title'] = 'Spigot - Log';
-$a['data'] = array();
-$a['custom-js'] = 'log.js';
+function getLog(): string {
+    $config = require realpath(__DIR__ . '/../config.php');
+    $SPIGOT_SERVER_PATH = rtrim($config['spigot']['server-path'], '/');
+    $logfile = $SPIGOT_SERVER_PATH . '/logs/latest.log';
 
-$SPIGOT_SERVER_PATH = rtrim($SPIGOT_SERVER_PATH, '/');
-$logfile = $SPIGOT_SERVER_PATH . '/logs/latest.log';
-
-if (file_exists($logfile)) {
-    $lines = file($logfile);
-    $lastLines = array_slice($lines, -100); // letzte 100 Zeilen
-    $lastLines = array_reverse($lastLines);
-    $a['data']['log'] = htmlspecialchars(implode("", $lastLines));
-} else {
-    $a['data']['log'] = "Logfile nicht gefunden.";
+    if (file_exists($logfile)) {
+        $lines = file($logfile);
+        $lastLines = array_slice($lines, -100); // letzte 100 Zeilen
+        $lastLines = array_reverse($lastLines);
+        return htmlspecialchars(implode("", $lastLines));
+    } else {
+        return "Logfile nicht gefunden.";
+    }
 }
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo $a['data']['log'];
+    echo getLog();
     exit();
 } else {
+    $a = [
+        'filename' => 'log.php',
+        'title' => 'Spigot - Log',
+        'data' => getLog(),
+        'custom-js' => 'log.js'
+    ];
     return $a;
 }

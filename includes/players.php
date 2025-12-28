@@ -1,19 +1,13 @@
 <?php
 
+require_once realpath(__DIR__ . '/../functions.php');
 requireLogin();
 
-$a = array();
-$a['filename'] = 'players.php';
-$a['title'] = 'Spigot - Players';
-$a['data'] = array();
-$a['custom-js'] = 'players.js';
-$a['custom-css'] = 'players.css';
-
-function getPlayers(): array|false {
+function getPlayers(): array {
     $json = getJsonFromPluginAPI('/players');
 
     if ($json === false) {
-        return false;
+        return [];
     }
 
     $data = json_decode($json, true);
@@ -37,5 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     exit();
 } else {
+    $a = [
+        'filename' => 'players.php',
+        'title' => 'Spigot - Players',
+        'custom-js' => 'players.js',
+        'custom-css' => 'players.css',
+        'data' => getPlayers()
+    ];
     return $a;
 }

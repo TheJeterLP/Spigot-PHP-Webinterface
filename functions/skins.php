@@ -1,6 +1,5 @@
 <?php
-
-require_once __DIR__ . '/../functions.php';
+require_once realpath(__DIR__ . '/../functions.php');
 requireLogin();
 
 // skins.php?mode=skins&uuid=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -17,7 +16,7 @@ if ($mode != 'skins' && $mode != 'capes' && $mode != 'heads') {
     exit;
 }
 
-$cacheDir = __DIR__ . '/../cache/' . $mode . '/';
+$cacheDir = realpath(__DIR__ . '/../../cache/' . $mode . '/');
 
 if (!is_dir($cacheDir)) {
     mkdir($cacheDir, 0755, true);
