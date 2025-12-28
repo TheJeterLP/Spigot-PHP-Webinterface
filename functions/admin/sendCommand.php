@@ -1,11 +1,8 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-require_once __DIR__ . '/../../includes/base.php';
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../functions.php';
 requireRole('admin');
+
 $cmd = trim($_POST['command'] ?? '');
 
 if ($cmd === '') {
@@ -23,27 +20,8 @@ foreach ($blocked as $b) {
     }
 }
 
-global $SPIGOT_PLUGIN_API_URL;
-
-$url = $SPIGOT_PLUGIN_API_URL . "/command";
-$payload = json_encode([
-    "command" => $cmd
-        ]);
-
-$ctx = stream_context_create([
-    "http" => [
-        "method" => "POST",
-        "timeout" => 3,
-        "header" => [
-            "Content-Type: application/json",
-            "Accept: application/json",
-            "X-API-Token: " . $_SESSION["api_token"]
-        ],
-        "content" => $payload
-    ]
-        ]);
-
-$json = @file_get_contents($url, false, $ctx);
+$payload = json_encode(["command" => $cmd]);
+$json = getJsonFromPluginAPI('/command', $payload, 'POST');
 if ($json === false) {
     http_response_code(502);
     echo json_encode(["ok" => false, "error" => "plugin_unreachable"]);

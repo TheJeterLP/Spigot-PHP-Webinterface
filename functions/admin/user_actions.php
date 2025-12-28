@@ -1,9 +1,12 @@
 <?php
-require_once __DIR__ . '/../../includes/base.php';
-require_once __DIR__ . '/../../database/db.php';
+require_once __DIR__ . '/../../functions.php';
 requireRole('admin');
 
 $action = $_POST['action'] ?? null;
+$db = new PDO('sqlite:' . __DIR__ . '/../../data/users.db');
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
 
 switch ($action) {
 
@@ -43,5 +46,5 @@ case 'resettoken':
     break;
 }
 
-header('Location: /admin/users.php');
+header('Location: /admin/users');
 exit;

@@ -1,0 +1,15 @@
+.plugin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.plugin-table th,
+.plugin-table td {
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.plugin-table tr:not(:last-child) {
+    border-bottom: 1px solid #333;
+}
+

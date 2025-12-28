@@ -1,9 +1,42 @@
-<FilesMatch "\.db$">
-    Require all denied
-</FilesMatch>
+<Files ~ ".htaccess">
+    Order deny,allow
+    Deny from all
+</Files>
 
-<FilesMatch "\.json$">
-    Require all denied
-</FilesMatch>
+<Files ~ "settings.php">
+    Order deny,allow
+    Deny from all
+</Files>
+
+<Files ~ "functions.php">
+    Order deny,allow
+    Deny from all
+</Files>
+
+<Files ~ "sites.php">
+    Order deny,allow
+    Deny from all
+</Files>
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
 
 Options -Indexes
+ErrorDocument 403 /functions/nopermission.php
+ErrorDocument 404 /functions/notfound.php
+order deny,allow
+
+# Enable GZIP
+<ifmodule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4.0[678] no-gzip
+BrowserMatch bMSIE !no-gzip !gzip-only-text/html
+</ifmodule>
+
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
