@@ -1,6 +1,6 @@
 <?php
-require_once realpath(__DIR__ . '/../functions.php');
 declare(strict_types=1);
+require_once realpath(__DIR__ . '/../functions.php');
 
 header("Content-Type: application/json");
 

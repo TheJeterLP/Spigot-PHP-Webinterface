@@ -6,19 +6,17 @@ requireLogin();
 function getPlayers(): array {
     $json = getJsonFromPluginAPI('/players');
 
-    if ($json === false) {
+    if (!is_array($json)) {
         return [];
     }
 
-    $data = json_decode($json, true);
-
-    foreach ($data as &$player) {
+    foreach ($json as &$player) {
         if (isset($player['uuid'])) {
             $player['uuid'] = str_replace('-', '', $player['uuid']);
         }
     }
     unset($player);
-    return $data;
+    return $json;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

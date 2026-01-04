@@ -27,13 +27,11 @@ if ($json === false) {
     exit;
 }
 
-$data = json_decode($json, true);
-
-if (!is_array($data)) {
+if (!is_array($json)) {
     http_response_code(502);
     echo json_encode(["ok" => false, "error" => "invalid_plugin_response"]);
     exit;
 }
 
-echo json_encode($data);
+echo json_encode($json);
 exit;

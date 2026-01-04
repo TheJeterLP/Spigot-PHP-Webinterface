@@ -26,6 +26,7 @@ setupDb();
 $headerfooter = true;
 $title = 'Spigot - Webinterface';
 $page = 'main';
+$data = [];
 
 //check if specific page was accessed
 if (isset($_GET['page'])) {
@@ -72,6 +73,9 @@ if (is_array($ret)) {
     if (isset($ret['main-class'])) {
         $mainClass = $ret['main-class'];
     }
+    if (isset($ret['data'])) {
+        $data = $ret['data'];
+    }
 } else if (is_string($ret)) {
     $title = 'Error';
 }
@@ -82,10 +86,7 @@ include 'templates/header.php';
 //check if return array is correctly
 if (is_array($ret) && isset($ret['filename']) && is_string($ret['filename'])) {
     //check if given template file exists
-    if (file_exists($file = 'templates/' . $ret['filename'])) {
-        if (isset($ret['data'])) {
-            $data = $ret['data'];
-        }
+    if (file_exists($file = 'templates/' . $ret['filename'])) {        
         //include template file
         include $file;
     } else {

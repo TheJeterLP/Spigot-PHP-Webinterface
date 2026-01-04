@@ -3,21 +3,7 @@ require_once realpath(__DIR__ . '/../functions.php');
 requireLogin();
 header("Content-Type: application/json; charset=utf-8");
 
-function getData(): array|false {
-    $json = getJsonFromPluginAPI('/online');
-    if ($json === false) {
-        return false;
-    }
-    $data = json_decode($json, true);
-    
-    if (!is_array($data)) {
-        return false;
-    }
-    
-    return $data;
-}
-
-$data = getData();
+$data = getJsonFromPluginAPI('/online');
 
 if (!$data) {
     echo json_encode([

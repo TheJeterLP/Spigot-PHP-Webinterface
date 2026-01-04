@@ -99,7 +99,7 @@ function getJsonFromPluginAPI($endpoint, $requestBody = null, $method = 'GET') {
     ]);
 
     $json = @file_get_contents($url, false, $ctx);
-
+    
     if ($json === false) {
         return false;
     }
@@ -110,7 +110,7 @@ function getJsonFromPluginAPI($endpoint, $requestBody = null, $method = 'GET') {
         return false;
     }
 
-    return json_encode($data);
+    return $data;
 }
 
 function getDatabase() {

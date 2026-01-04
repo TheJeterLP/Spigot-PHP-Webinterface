@@ -9,11 +9,10 @@
         </thead>
         <tbody id="plugin-table-body">
             <?php
-            $plugins = $data;
-            if (empty($plugins)) {
+            if (empty($data)) {
                 echo '<tr><td colspan="3">No Plugins installed!</td></tr>';
             } else {
-                foreach ($plugins as $pl) {
+                foreach ($data as $pl) {
                     if ($pl['enabled'] === true) {
                         $statusBadge = '<span class="badge text-bg-success">Active</span>';
                     } else if ($pl['enabled'] === false) {
